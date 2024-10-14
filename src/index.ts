@@ -6,9 +6,11 @@ import { editTaskTitleController } from "./presentation/task/edit-task-title-con
 import { getTaskController } from "./presentation/task/get-task-controller";
 import { getTaskListController } from "./presentation/task/get-task-list-controller";
 import { setTaskDoneController } from "./presentation/task/set-task-done-controller";
+import { getStudentListController } from "./presentation/students/get-student-list-controller";
 
 const app = new Hono();
 
+app.route("/", getStudentListController);
 app.route("/", getTaskController);
 app.route("/", getTaskListController);
 app.route("/", createTaskController);

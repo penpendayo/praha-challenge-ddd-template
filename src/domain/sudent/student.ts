@@ -1,15 +1,19 @@
+export type StudentParticipantStatus = 'leave' | 'withdraw' | 'enrollment';
+
 export class Student {
+  readonly id: string;
   readonly email: string;
   readonly name: string;
-  readonly participantStatus: "leave" | "withdraw" | "enrollment";
+  readonly enrollmentStatus: StudentParticipantStatus;
 
-  constructor(props: { email: string; name: string; participantStatus: "leave" | "withdraw" | "enrollment" }) {
+  constructor(props: { id?: string, email: string; name: string; enrollmentStatus: StudentParticipantStatus }) {
+    this.id = props.id ?? crypto.randomUUID(); // ULIDを使ったほうが良いかも
     this.email = props.email;
     this.name = props.name;
-    this.participantStatus = props.participantStatus
+    this.enrollmentStatus = props.enrollmentStatus
   }
 
-  changeParticipantStatus(participantStatus: "leave" | "withdraw" | "enrollment") {
-    return new Student({ ...this, participantStatus });
+  changeParticipantStatus(enrollmentStatus: StudentParticipantStatus) {
+    return new Student({ ...this, enrollmentStatus });
   }
 }

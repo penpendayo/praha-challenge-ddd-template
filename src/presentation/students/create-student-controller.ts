@@ -17,10 +17,10 @@ export const createStudentListController = new Hono();
 const createStudentUseCaseBodySchema =  z.object({ 
   email: z.string(),
   name: z.string(), 
-  enrollmentStatus: z.union([
-    z.literal("enrollment"),
-    z.literal("withdraw"),
-    z.literal("leave")
+  enrollmentStatus: z.enum([
+    "enrollment",
+    "withdraw",
+    "leave"
   ]) 
 });
 

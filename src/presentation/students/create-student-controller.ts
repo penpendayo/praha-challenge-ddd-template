@@ -18,7 +18,6 @@ const createStudentUseCaseBodySchema =  z.object({
   email: z.string(),
   name: z.string(), 
   enrollmentStatus: z.enum([
-    "enrollment",
     "withdraw",
     "leave"
   ]) 

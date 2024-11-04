@@ -27,7 +27,7 @@ export class LeaveTeamStudentUseCaseTeamNotFoundError extends Error {
 }
 
 /**
- * 生徒をチームに追加する
+ * 生徒を休会にしてチームから外す
  */
 export class LeaveTeamStudentUseCase {
   public constructor(

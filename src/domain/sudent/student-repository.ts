@@ -1,5 +1,6 @@
 import type { Student } from "./student";
 
 export type StudentRepositoryInterface = {
-  save: (task: Student) => Promise<Student>;
+  save: (student: Student) => Promise<Student>;
+  findById: (id: string) => Promise<Student|null>;
 };

@@ -1,4 +1,8 @@
-import type { Student, StudentParticipantStatus } from "../../domain/sudent/student";
+import { eq } from "drizzle-orm";
+import {
+  Student,
+  type StudentParticipantStatus,
+} from "../../domain/sudent/student";
 import type { StudentRepositoryInterface } from "../../domain/sudent/student-repository";
 import type { Database } from "../../libs/drizzle/get-database";
 import { students } from "../../libs/drizzle/schema";
@@ -25,18 +29,56 @@ export class PostgresqlStudentRepository implements StudentRepositoryInterface {
       });
     return student;
   }
+
+  public async findById(id: string): Promise<Student | null> {
+    const rows = await this.database
+      .select({
+        id: students.id,
+        email: students.email,
+        name: students.name,
+        enrollmentStatus: students.enrollmentStatus,
+      })
+      .from(students)
+      .where(eq(students.id, id));
+
+    const row = rows[0];
+    if (!row) {
+      return null;
+    }
+
+    return new Student({
+      email: row.email,
+      enrollmentStatus: toEnrollmentStatus(row.enrollmentStatus),
+      name: row.name,
+      id: row.id,
+    });
+  }
 }
 
-const toEnrollmentStatusColumn = (studentParticipantStatus: StudentParticipantStatus) => {
+const toEnrollmentStatusColumn = (
+  studentParticipantStatus: StudentParticipantStatus,
+) => {
   switch (studentParticipantStatus) {
-    case 'enrollment': {
-      return 1;
-    }
-    case 'withdraw': {
+    case "withdraw": {
       return 2;
     }
-    case 'leave': {
+    case "leave": {
       return 3;
     }
+  }
+};
+
+const toEnrollmentStatus = (
+  studentParticipantStatus: number,
+): StudentParticipantStatus => {
+  switch (studentParticipantStatus) {
+    case 2: {
+      return "withdraw";
+    }
+    case 3: {
+      return "leave";
+    }
+    default:
+      throw new Error(`想定しない参加ステータス: ${studentParticipantStatus}`);
   }
 };

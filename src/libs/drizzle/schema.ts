@@ -8,7 +8,7 @@ export const tasks = pgTable("tasks", {
 });
 
 export const students = pgTable("students", {
-  id: varchar("id").notNull(),
+  id: varchar("id").primaryKey(),
   email: varchar("email").notNull(),
   name: varchar("name").notNull(),
   enrollmentStatus: integer("enrollment_status").notNull(),
@@ -23,7 +23,7 @@ export const studentRelations = relations(students, ({ one }) => ({
 }));
 
 export const teams = pgTable("teams", {
-  id: varchar("id").notNull(),
+  id: varchar("id").primaryKey(),
   name: varchar("name").notNull(),
 });
 

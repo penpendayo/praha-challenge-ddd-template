@@ -29,16 +29,6 @@ export class Team {
   }
 
   /**
-   * 生徒数が少なすぎたり多すぎたりしないか
-   */
-  isValidMemberCount(): boolean {
-    return (
-      this.countOfEnrollmentStudents >= Team.MIN_MEMBERS &&
-      this.countOfEnrollmentStudents <= Team.MAX_MEMBERS
-    );
-  }
-
-  /**
    * チームに生徒を追加する
    */
   addStudent(student: Student) {

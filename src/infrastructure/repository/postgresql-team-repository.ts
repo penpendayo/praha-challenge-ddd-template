@@ -39,7 +39,8 @@ export class PostgresqlTeamRepository implements TeamRepositoryInterface {
               enrollmentStatus: toEnrollmentStatusColumn(
                 student.enrollmentStatus,
               ),
-              teamId: team.id,
+              teamId:
+                student.enrollmentStatus === "enrollment" ? team.id : null,
             })
             .where(eq(students.id, student.id));
         }),

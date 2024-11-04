@@ -46,12 +46,6 @@ export class EnrollTeamStudentUseCase {
       throw new EnrollTeamStudentUseCaseStudentNotFoundError();
     }
 
-    // 指定した生徒が、すでにチームに所属している場合はエラーにする
-    const existTeam = await this.teamRepo.findByStudentId(student.id);
-    if (existTeam) {
-      throw new Error("this student is already enrolled in a team");
-    }
-
     // 追加するチームが存在するか確認する
     const team = await this.teamRepo.findById(input.teamId);
     if (!team) {

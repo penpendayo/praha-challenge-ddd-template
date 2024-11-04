@@ -86,31 +86,6 @@ export class PostgresqlTeamRepository implements TeamRepositoryInterface {
       }),
     });
   }
-
-  public async findByStudentId(studentId: string): Promise<Team | null> {
-    const [row] = await this.database
-      .select({
-        team: {
-          id: teams.id,
-          name: teams.name,
-        },
-        student: {
-          id: students.id,
-          name: students.name,
-          email: students.email,
-          enrollmentStatus: students.enrollmentStatus,
-        },
-      })
-      .from(students)
-      .innerJoin(teams, eq(teams.id, students.teamId))
-      .where(eq(students.id, studentId));
-
-    if (!row) {
-      return null;
-    }
-
-    return this.findById(row.team.id);
-  }
 }
 
 const toEnrollmentStatusColumn = (

@@ -79,6 +79,6 @@ const toEnrollmentStatus = (
       return "leave";
     }
     default:
-      throw new Error(`想定しない参加ステータス: ${studentParticipantStatus}`);
+      throw new Error(`想定しない参加ステータス（すでにチームに加入してたりするかも）: ${studentParticipantStatus}`);
   }
 };

@@ -53,6 +53,30 @@ export class PostgresqlStudentRepository implements StudentRepositoryInterface {
       id: row.id,
     });
   }
+
+  public async findByEmail(email: string): Promise<Student | null> {
+    const rows = await this.database
+      .select({
+        id: students.id,
+        email: students.email,
+        name: students.name,
+        enrollmentStatus: students.enrollmentStatus,
+      })
+      .from(students)
+      .where(eq(students.email, email));
+
+    const row = rows[0];
+    if (!row) {
+      return null;
+    }
+
+    return new Student({
+      email: row.email,
+      enrollmentStatus: toEnrollmentStatus(row.enrollmentStatus),
+      name: row.name,
+      id: row.id,
+    });
+  }
 }
 
 const toEnrollmentStatusColumn = (

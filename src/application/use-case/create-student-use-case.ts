@@ -22,7 +22,11 @@ export class CreateStudentUseCase {
   public async invoke(
     input: CreateStudentUseCaseInput,
   ): Promise<CreateStudentUseCasePayload> {
-    // TODO: 同じメールアドレスを持ったユーザーがいないかチェックする
+    // NOTE: そもそもここでチェックしなくても、emailカラムにユニーク制約をつけておけば、DB側でエラーが出るので不要かも？
+    const existStudent = await this.studentRepository.findByEmail(input.email);
+    if (existStudent) {
+      throw new Error("同じメールアドレスを持った生徒が存在します");
+    }
     
     const student = new Student(input);
 

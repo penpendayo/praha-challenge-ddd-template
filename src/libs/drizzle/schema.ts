@@ -9,7 +9,7 @@ export const tasks = pgTable("tasks", {
 
 export const students = pgTable("students", {
   id: varchar("id").primaryKey(),
-  email: varchar("email").notNull(),
+  email: varchar("email").unique().notNull(),
   name: varchar("name").notNull(),
   enrollmentStatus: integer("enrollment_status").notNull(),
   teamId: varchar("team_id"),

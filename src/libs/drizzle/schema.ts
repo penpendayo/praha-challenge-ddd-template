@@ -1,11 +1,5 @@
 import { relations } from "drizzle-orm";
-import { boolean, integer, pgTable, varchar } from "drizzle-orm/pg-core";
-
-export const tasks = pgTable("tasks", {
-  id: varchar("id").notNull(),
-  title: varchar("title").notNull(),
-  done: boolean("done").notNull(),
-});
+import { integer, pgTable, varchar } from "drizzle-orm/pg-core";
 
 export const students = pgTable("students", {
   id: varchar("id").primaryKey(),

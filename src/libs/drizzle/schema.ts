@@ -1,6 +1,15 @@
 import { relations } from "drizzle-orm";
 import { integer, pgTable, varchar } from "drizzle-orm/pg-core";
 
+export const challenges = pgTable("challenges", {
+  id: varchar("id").primaryKey(),
+  name: varchar("name").notNull(),
+});
+
+export const challengeRelations = relations(challenges, ({ many }) => ({
+  students: many(students),
+}));
+
 export const students = pgTable("students", {
   id: varchar("id").primaryKey(),
   email: varchar("email").unique().notNull(),
@@ -9,12 +18,19 @@ export const students = pgTable("students", {
   teamId: varchar("team_id"),
 });
 
-export const studentRelations = relations(students, ({ one }) => ({
+export const studentRelations = relations(students, ({ one, many }) => ({
   posts: one(teams, {
     fields: [students.teamId],
     references: [teams.id]
   }),
+  challenges: many(challenges),
 }));
+
+export const studentsToChallenges = pgTable('students_to_challenge', {
+  studentId: varchar('student_id').notNull().references(() => students.id),
+  challengeId: varchar('challenge_id').notNull().references(() => challenges.id),
+  status: integer('status').notNull(),
+});
 
 export const teams = pgTable("teams", {
   id: varchar("id").primaryKey(),

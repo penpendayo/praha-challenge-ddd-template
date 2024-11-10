@@ -50,6 +50,13 @@
       "when": 1731235954611,
       "tag": "0006_violet_red_ghost",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1731248255688,
+      "tag": "0007_light_vision",
+      "breakpoints": true
     }
   ]
 }

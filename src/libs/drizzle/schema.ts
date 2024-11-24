@@ -15,11 +15,11 @@ export const students = pgTable("students", {
   email: varchar("email").unique().notNull(),
   name: varchar("name").notNull(),
   enrollmentStatus: integer("enrollment_status").notNull(),
-  teamId: varchar("team_id"),
+  teamId: varchar("team_id").references(() => teams.id),
 });
 
 export const studentRelations = relations(students, ({ one, many }) => ({
-  posts: one(teams, {
+  team: one(teams, {
     fields: [students.teamId],
     references: [teams.id]
   }),

@@ -57,6 +57,13 @@
       "when": 1731248255688,
       "tag": "0007_light_vision",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1732458432143,
+      "tag": "0008_redundant_wallflower",
+      "breakpoints": true
     }
   ]
 }

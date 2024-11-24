@@ -20,21 +20,16 @@ export class Team {
   }
 
   /**
-   * チームに所属している参加中の生徒数を返す
-   */
-  get countOfEnrollmentStudents() {
-    return this.students.filter(
-      (student) => student.enrollmentStatus === "enrollment",
-    ).length;
-  }
-
-  /**
    * チームに生徒を追加する
    */
   addStudent(student: Student) {
-    const canAddStudent = this.countOfEnrollmentStudents < Team.MAX_MEMBERS;
-    if (!canAddStudent) {
-      throw new Error("すでに4人いるので追加できません");
+    const isFull = this.students.length >= Team.MAX_MEMBERS;
+    if (isFull) {
+      throw new Error(`すでに${Team.MAX_MEMBERS}人いるので追加できません`);
+    }
+
+    if (student.teamId) {
+      throw new Error("すでにチームに参加している生徒は追加できません");
     }
 
     return new Team({
@@ -50,32 +45,12 @@ export class Team {
   }
 
   /**
-   * チームにいる生徒を退会にする
+   * チームから生徒を外す
    */
-  leaveStudent(studentId: string) {
+  removeStudent(studentId: string) {
     return new Team({
       ...this,
-      students: this.students.map((student) => {
-        if (student.id === studentId) {
-          return student.changeEnrollmentStatus("leave");
-        }
-        return student;
-      }),
-    });
-  }
-
-  /**
-   * チームにいる生徒を休会にする
-   */
-  withDrawStudent(studentId: string) {
-    return new Team({
-      ...this,
-      students: this.students.map((student) => {
-        if (student.id === studentId) {
-          return student.changeEnrollmentStatus("withdraw");
-        }
-        return student;
-      }),
+      students: this.students.filter((student) => student.id !== studentId),
     });
   }
 }

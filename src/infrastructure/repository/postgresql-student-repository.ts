@@ -5,7 +5,7 @@ import {
 } from "../../domain/sudent/student";
 import type { StudentRepositoryInterface } from "../../domain/sudent/student-repository";
 import type { Database } from "../../libs/drizzle/get-database";
-import { students } from "../../libs/drizzle/schema";
+import { students, teams } from "../../libs/drizzle/schema";
 
 export class PostgresqlStudentRepository implements StudentRepositoryInterface {
   public constructor(private readonly database: Database) {}
@@ -37,8 +37,10 @@ export class PostgresqlStudentRepository implements StudentRepositoryInterface {
         email: students.email,
         name: students.name,
         enrollmentStatus: students.enrollmentStatus,
+        teamId: teams.id,
       })
       .from(students)
+      .leftJoin(teams, eq(teams.id, students.teamId))
       .where(eq(students.id, id));
 
     const row = rows[0];
@@ -46,12 +48,28 @@ export class PostgresqlStudentRepository implements StudentRepositoryInterface {
       return null;
     }
 
-    return new Student({
-      email: row.email,
-      enrollmentStatus: toEnrollmentStatus(row.enrollmentStatus),
-      name: row.name,
-      id: row.id,
-    });
+    const status = toEnrollmentStatus(row.enrollmentStatus);
+    if (!row.teamId) {
+      return new Student({
+        email: row.email,
+        enrollmentStatus: status,
+        name: row.name,
+        id: row.id,
+        teamId: null,
+      });
+    }
+
+    if (status === "enrollment") {
+      return new Student({
+        email: row.email,
+        enrollmentStatus: status,
+        name: row.name,
+        id: row.id,
+        teamId: row.teamId,
+      });
+    }
+
+    throw new Error("想定しない参加ステータスです。");
   }
 
   public async findByEmail(email: string): Promise<Student | null> {
@@ -61,8 +79,10 @@ export class PostgresqlStudentRepository implements StudentRepositoryInterface {
         email: students.email,
         name: students.name,
         enrollmentStatus: students.enrollmentStatus,
+        teamId: teams.id,
       })
       .from(students)
+      .leftJoin(teams, eq(teams.id, students.teamId))
       .where(eq(students.email, email));
 
     const row = rows[0];
@@ -70,12 +90,29 @@ export class PostgresqlStudentRepository implements StudentRepositoryInterface {
       return null;
     }
 
-    return new Student({
-      email: row.email,
-      enrollmentStatus: toEnrollmentStatus(row.enrollmentStatus),
-      name: row.name,
-      id: row.id,
-    });
+    const status = toEnrollmentStatus(row.enrollmentStatus);
+    if (!row.teamId) {
+      return new Student({
+        email: row.email,
+        enrollmentStatus: status,
+        name: row.name,
+        id: row.id,
+        teamId: null,
+      });
+    }
+
+    if (status === "enrollment") {
+      return new Student({
+        email: row.email,
+        enrollmentStatus: status,
+        name: row.name,
+        id: row.id,
+        teamId: row.teamId,
+      });
+    }
+
+    throw new Error("想定しない参加ステータスです。");
+
   }
 }
 
@@ -83,6 +120,9 @@ const toEnrollmentStatusColumn = (
   studentParticipantStatus: StudentParticipantStatus,
 ) => {
   switch (studentParticipantStatus) {
+    case "enrollment": {
+      return 1;
+    }
     case "withdraw": {
       return 2;
     }
@@ -96,6 +136,9 @@ const toEnrollmentStatus = (
   studentParticipantStatus: number,
 ): StudentParticipantStatus => {
   switch (studentParticipantStatus) {
+    case 1: {
+      return "enrollment";
+    }
     case 2: {
       return "withdraw";
     }
@@ -103,6 +146,8 @@ const toEnrollmentStatus = (
       return "leave";
     }
     default:
-      throw new Error(`想定しない参加ステータス（すでにチームに加入してたりするかも）: ${studentParticipantStatus}`);
+      throw new Error(
+        `想定しない参加ステータスです: ${studentParticipantStatus}`,
+      );
   }
 };

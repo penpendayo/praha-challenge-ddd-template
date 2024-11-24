@@ -1,5 +1,4 @@
-
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { Team } from "../../domain/team/team";
 import { TeamName } from "../../domain/team/team-name";
 import type { TeamRepositoryInterface } from "../../domain/team/team-repository";
@@ -15,6 +14,7 @@ export class PostgresqlTeamRepository implements TeamRepositoryInterface {
 
   public async save(team: Team): Promise<Team> {
     await this.database.transaction(async (tx) => {
+      // チームの基本情報の更新
       await tx
         .insert(teams)
         .values({
@@ -28,6 +28,36 @@ export class PostgresqlTeamRepository implements TeamRepositoryInterface {
           },
         });
 
+      // チームに所属している生徒を取得する
+      const studentsInTeam = await tx
+        .select({
+          id: students.id,
+          name: students.name,
+          email: students.email,
+          enrollmentStatus: students.enrollmentStatus,
+        })
+        .from(students)
+        .innerJoin(teams, eq(teams.id, students.teamId))
+        .where(eq(teams.id, team.id));
+
+      //チームから外れた生徒IDを取得する
+      const studentIdsToRemove = team.students
+        .filter((student) => {
+          return !studentsInTeam.some(
+            (studentInTeam) => studentInTeam.id === student.id,
+          );
+        })
+        .map((student) => student.id);
+
+      // チームから外れた生徒を外す
+      await tx
+        .update(students)
+        .set({
+          teamId: null,
+        })
+        .where(inArray(students.id, studentIdsToRemove));
+
+      // チームに参加している生徒を更新する
       await Promise.all(
         team.students.map((student) => {
           return tx
@@ -39,8 +69,7 @@ export class PostgresqlTeamRepository implements TeamRepositoryInterface {
               enrollmentStatus: toEnrollmentStatusColumn(
                 student.enrollmentStatus,
               ),
-              teamId:
-                student.enrollmentStatus === "enrollment" ? team.id : null,
+              teamId: team.id,
             })
             .where(eq(students.id, student.id));
         }),
@@ -96,12 +125,6 @@ const toEnrollmentStatusColumn = (
     case "enrollment": {
       return 1;
     }
-    case "withdraw": {
-      return 2;
-    }
-    case "leave": {
-      return 3;
-    }
   }
 };
 
@@ -111,12 +134,6 @@ const toEnrollmentStatus = (
   switch (studentParticipantStatus) {
     case 1: {
       return "enrollment";
-    }
-    case 2: {
-      return "withdraw";
-    }
-    case 3: {
-      return "leave";
     }
     default:
       throw new Error(`想定しない参加ステータス: ${studentParticipantStatus}`);

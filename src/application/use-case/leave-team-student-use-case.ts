@@ -27,7 +27,7 @@ export class LeaveTeamStudentUseCaseTeamNotFoundError extends Error {
 }
 
 /**
- * 生徒を休会にしてチームから外す
+ * 生徒をチームから外す
  */
 export class LeaveTeamStudentUseCase {
   public constructor(
@@ -44,13 +44,13 @@ export class LeaveTeamStudentUseCase {
     }
 
     // 生徒を休会状態にして、チームから外す
-    const newTeam = team.leaveStudent(input.studentId);
+    const newTeam = team.removeStudent(input.studentId);
     const savedTeam = await this.teamRepo.save(newTeam);
 
-    if (savedTeam.countOfEnrollmentStudents === 2) {
+    if (savedTeam.students.length === 2) {
       // TODO: 参加者が減ることでチームが2名以下になってしまう場合、管理者のメールアドレス（今回の課題ではあなたのメールアドレス）宛にメールを送信する。
     }
-    if (savedTeam.countOfEnrollmentStudents === 1) {
+    if (savedTeam.students.length === 1) {
       // TODO: 参加者が減ることでチームが1名になってしまう場合、残った参加者を自動的に他のチームに合流させる
     }
 

@@ -1,7 +1,9 @@
-import type { StudentListQueryServiceInterface, StudentListQueryServicePayload } from "../../application/query-service/students-list-query-service";
+import type {
+  StudentListQueryServiceInterface,
+  StudentListQueryServicePayload,
+} from "../../application/query-service/students-list-query-service";
 import type { Database } from "../../libs/drizzle/get-database";
 import { students } from "../../libs/drizzle/schema";
-
 
 export class PostgresqlStudentListQueryService
   implements StudentListQueryServiceInterface
@@ -9,7 +11,7 @@ export class PostgresqlStudentListQueryService
   public constructor(private readonly database: Database) {}
 
   public async invoke(): Promise<StudentListQueryServicePayload> {
-    return this.database
+    return await this.database
       .select({
         id: students.id,
         email: students.email,

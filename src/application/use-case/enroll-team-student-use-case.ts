@@ -1,6 +1,7 @@
 import type { StudentRepositoryInterface } from "../../domain/sudent/student-repository";
 import type { TeamRepositoryInterface } from "../../domain/team/team-repository";
 
+
 export type EnrollTeamStudentUseCaseInput = {
   studentId: string;
   teamId: string;
@@ -17,6 +18,15 @@ export class EnrollTeamStudentUseCaseStudentNotFoundError extends Error {
 
   public constructor() {
     super("student not found");
+  }
+}
+
+export class EnrollTeamStudentUseCaseStudentAlreadyInTeamError extends Error {
+  public override readonly name =
+    "EnrollTeamStudentUseCaseStudentAlreadyInTeamError";
+
+  public constructor() {
+    super("student already in team");
   }
 }
 

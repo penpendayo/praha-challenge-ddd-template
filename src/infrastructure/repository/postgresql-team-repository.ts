@@ -1,4 +1,4 @@
-import { eq, inArray } from "drizzle-orm";
+import { eq, inArray, sql } from "drizzle-orm";
 import { Team } from "../../domain/team/team";
 import { TeamName } from "../../domain/team/team-name";
 import type { TeamRepositoryInterface } from "../../domain/team/team-repository";
@@ -105,6 +105,59 @@ export class PostgresqlTeamRepository implements TeamRepositoryInterface {
     return new Team({
       id: row.team.id,
       name: TeamName(row.team.name),
+      students: rows.flatMap(({ student }) => {
+        if (!student) return [];
+        return new TeamStudent({
+          id: student.id,
+          name: student.name,
+          email: student.email,
+          enrollmentStatus: toEnrollmentStatus(student.enrollmentStatus),
+        });
+      }),
+    });
+  }
+
+  /**
+   * 人数が最小のチームを取得する（最小の数が同じチームが複数ある場合はランダムで取得する）
+   */
+  public async findTheSmallestTeam(): Promise<Team> {
+    const [team] = await this.database
+      .select({
+        id: teams.id,
+        name: teams.name,
+        studentCount: sql<number>`count(${students.id})`.as("student_count"),
+      })
+      .from(teams)
+      .leftJoin(students, eq(teams.id, students.teamId))
+      .groupBy(teams.id, teams.name)
+      .orderBy(sql`student_count`)
+      //TODO: 最小の数が同じチームが複数ある場合はランダムで取得するべきだけど、面倒くさいのでとりあえずこれで取得してる
+      .limit(1);
+
+    if (!team) {
+      throw new Error("チームが存在しません");
+    }
+
+    const rows = await this.database
+      .select({
+        team: {
+          id: teams.id,
+          name: teams.name,
+        },
+        student: {
+          id: students.id,
+          name: students.name,
+          email: students.email,
+          enrollmentStatus: students.enrollmentStatus,
+        },
+      })
+      .from(teams)
+      .leftJoin(students, eq(teams.id, students.teamId))
+      .where(eq(teams.id, team.id));
+
+    return new Team({
+      id: team.id,
+      name: TeamName(team.name),
       students: rows.flatMap(({ student }) => {
         if (!student) return [];
         return new TeamStudent({

@@ -2,36 +2,36 @@ import type { StudentRepositoryInterface } from "../../domain/sudent/student-rep
 import type { TeamRepositoryInterface } from "../../domain/team/team-repository";
 
 
-export type EnrollTeamStudentUseCaseInput = {
+export type AddTeamStudentUseCaseInput = {
   studentId: string;
   teamId: string;
 };
 
-export type EnrollTeamStudentUseCasePayload = {
+export type AddTeamStudentUseCasePayload = {
   id: string;
   name: string;
 };
 
-export class EnrollTeamStudentUseCaseStudentNotFoundError extends Error {
+export class AddTeamStudentUseCaseStudentNotFoundError extends Error {
   public override readonly name =
-    "EnrollTeamStudentUseCaseStudentNotFoundError";
+    "AddTeamStudentUseCaseStudentNotFoundError";
 
   public constructor() {
     super("student not found");
   }
 }
 
-export class EnrollTeamStudentUseCaseStudentAlreadyInTeamError extends Error {
+export class AddTeamStudentUseCaseStudentAlreadyInTeamError extends Error {
   public override readonly name =
-    "EnrollTeamStudentUseCaseStudentAlreadyInTeamError";
+    "AddTeamStudentUseCaseStudentAlreadyInTeamError";
 
   public constructor() {
     super("student already in team");
   }
 }
 
-export class EnrollTeamStudentUseCaseTeamNotFoundError extends Error {
-  public override readonly name = "EnrollTeamStudentUseCaseTeamNotFoundError";
+export class AddTeamStudentUseCaseTeamNotFoundError extends Error {
+  public override readonly name = "AddTeamStudentUseCaseTeamNotFoundError";
 
   public constructor() {
     super("team not found");
@@ -41,25 +41,25 @@ export class EnrollTeamStudentUseCaseTeamNotFoundError extends Error {
 /**
  * 生徒をチームに追加する
  */
-export class EnrollTeamStudentUseCase {
+export class AddTeamStudentUseCase {
   public constructor(
     private readonly studentRepository: StudentRepositoryInterface,
     private readonly teamRepo: TeamRepositoryInterface,
   ) {}
 
   public async invoke(
-    input: EnrollTeamStudentUseCaseInput,
-  ): Promise<EnrollTeamStudentUseCasePayload> {
+    input: AddTeamStudentUseCaseInput,
+  ): Promise<AddTeamStudentUseCasePayload> {
     // 生徒を取得する
     const student = await this.studentRepository.findById(input.studentId);
     if (!student) {
-      throw new EnrollTeamStudentUseCaseStudentNotFoundError();
+      throw new AddTeamStudentUseCaseStudentNotFoundError();
     }
 
     // 追加するチームが存在するか確認する
     const team = await this.teamRepo.findById(input.teamId);
     if (!team) {
-      throw new EnrollTeamStudentUseCaseTeamNotFoundError();
+      throw new AddTeamStudentUseCaseTeamNotFoundError();
     }
 
     // 生徒をチームに追加して保存する

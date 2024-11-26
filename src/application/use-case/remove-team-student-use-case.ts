@@ -2,28 +2,28 @@ import type { Notification } from "../../domain/notification/notification";
 import type { StudentRepositoryInterface } from "../../domain/sudent/student-repository";
 import type { TeamRepositoryInterface } from "../../domain/team/team-repository";
 
-export type RemoveStudentFromTeamUseCaseInput = {
+export type RemoveTeamStudentUseCaseInput = {
   studentId: string;
   teamId: string;
 };
 
-export type RemoveStudentFromTeamUseCasePayload = {
+export type RemoveTeamStudentUseCasePayload = {
   id: string;
   name: string;
 };
 
-export class RemoveStudentFromTeamUseCaseStudentNotFoundError extends Error {
+export class RemoveTeamStudentUseCaseStudentNotFoundError extends Error {
   public override readonly name =
-    "RemoveStudentFromTeamUseCaseStudentNotFoundError";
+    "RemoveTeamStudentUseCaseStudentNotFoundError";
 
   public constructor() {
     super("student not found");
   }
 }
 
-export class RemoveStudentFromTeamUseCaseTeamNotFoundError extends Error {
+export class RemoveTeamStudentUseCaseTeamNotFoundError extends Error {
   public override readonly name =
-    "RemoveStudentFromTeamUseCaseTeamNotFoundError";
+    "RemoveTeamStudentUseCaseTeamNotFoundError";
 
   public constructor() {
     super("team not found");
@@ -33,7 +33,7 @@ export class RemoveStudentFromTeamUseCaseTeamNotFoundError extends Error {
 /**
  * 生徒をチームから外す
  */
-export class RemoveStudentFromTeamUseCase {
+export class RemoveTeamStudentUseCase {
   public constructor(
     private readonly teamRepo: TeamRepositoryInterface,
     private readonly studentRepo: StudentRepositoryInterface,
@@ -41,12 +41,12 @@ export class RemoveStudentFromTeamUseCase {
   ) {}
 
   public async invoke(
-    input: RemoveStudentFromTeamUseCaseInput,
-  ): Promise<RemoveStudentFromTeamUseCasePayload> {
+    input: RemoveTeamStudentUseCaseInput,
+  ): Promise<RemoveTeamStudentUseCasePayload> {
     // チームを取得する
     const team = await this.teamRepo.findById(input.teamId);
     if (!team) {
-      throw new RemoveStudentFromTeamUseCaseTeamNotFoundError();
+      throw new RemoveTeamStudentUseCaseTeamNotFoundError();
     }
 
     // 生徒をチームから外す

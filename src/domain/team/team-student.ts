@@ -1,6 +1,6 @@
 import { ulid } from "ulid";
 
-export type TeamStudentEnrollmentStatus = "enrollment";
+export type TeamStudentEnrollmentStatus = "参加";
 
 /**
  * チームに所属している生徒

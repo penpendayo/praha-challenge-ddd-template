@@ -175,7 +175,7 @@ const toEnrollmentStatusColumn = (
   studentEnrollmentStatus: TeamStudentEnrollmentStatus,
 ) => {
   switch (studentEnrollmentStatus) {
-    case "enrollment": {
+    case "参加": {
       return 1;
     }
   }
@@ -186,7 +186,7 @@ const toEnrollmentStatus = (
 ): TeamStudentEnrollmentStatus => {
   switch (studentEnrollmentStatus) {
     case 1: {
-      return "enrollment";
+      return "参加";
     }
     default:
       throw new Error(`想定しない参加ステータス: ${studentEnrollmentStatus}`);

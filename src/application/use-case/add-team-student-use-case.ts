@@ -17,7 +17,7 @@ export class AddTeamStudentUseCaseStudentNotFoundError extends Error {
     "AddTeamStudentUseCaseStudentNotFoundError";
 
   public constructor() {
-    super("student not found");
+    super("生徒が見つかりません");
   }
 }
 
@@ -26,7 +26,7 @@ export class AddTeamStudentUseCaseStudentAlreadyInTeamError extends Error {
     "AddTeamStudentUseCaseStudentAlreadyInTeamError";
 
   public constructor() {
-    super("student already in team");
+    super("生徒がすでにチームに加入しています");
   }
 }
 
@@ -34,7 +34,7 @@ export class AddTeamStudentUseCaseTeamNotFoundError extends Error {
   public override readonly name = "AddTeamStudentUseCaseTeamNotFoundError";
 
   public constructor() {
-    super("team not found");
+    super("チームが見つかりません");
   }
 }
 

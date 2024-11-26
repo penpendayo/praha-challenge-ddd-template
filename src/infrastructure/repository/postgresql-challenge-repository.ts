@@ -92,16 +92,16 @@ export class PostgresqlChallengeRepository
 
 const toChallengeStatusColumn = (challengeStatus: ChallengeStatus) => {
   switch (challengeStatus) {
-    case "NOT_STARTED": {
+    case "未着手": {
       return 0;
     }
-    case "IN_PROGRESS": {
+    case "進行中": {
       return 1;
     }
-    case "WAITING_FOR_REVIEW": {
+    case "レビュー待ち": {
       return 2;
     }
-    case "COMPLETED": {
+    case "完了": {
       return 3;
     }
   }
@@ -112,16 +112,16 @@ const fromChallengeStatusColumn = (
 ): ChallengeStatus => {
   switch (challengeStatus) {
     case 0: {
-      return "NOT_STARTED";
+      return "未着手";
     }
     case 1: {
-      return "IN_PROGRESS";
+      return "進行中";
     }
     case 2: {
-      return "WAITING_FOR_REVIEW";
+      return "レビュー待ち";
     }
     case 3: {
-      return "COMPLETED";
+      return "完了";
     }
     default: {
       throw new Error(`未知の課題ステータス: ${challengeStatus}`);

@@ -1,6 +1,6 @@
 import { ulid } from "ulid";
 
-export type StudentEnrollmentStatus = "enrollment" | "leave" | "withdraw";
+export type StudentEnrollmentStatus = "参加" | "休会" | "退会";
 
 /**
  * 生徒
@@ -18,14 +18,14 @@ export class Student {
           id?: string;
           email: string;
           name: string;
-          enrollmentStatus: "leave" | "withdraw" | "enrollment";
+          enrollmentStatus: "休会" | "退会" | "参加";
           teamId: null;
         }
       | {
           id?: string;
           email: string;
           name: string;
-          enrollmentStatus: "enrollment";
+          enrollmentStatus: "参加";
           teamId: string;
         },
   ) {
@@ -41,13 +41,13 @@ export class Student {
    */
   changeEnrollmentStatus(status: StudentEnrollmentStatus) {
     switch (status) {
-      case "enrollment":
+      case "参加":
         return new Student({
           ...this,
           enrollmentStatus: status,
         });
-      case "leave":
-      case "withdraw":
+      case "休会":
+      case "退会":
         if (this.teamId) {
           throw new Error(
             "チームに参加している生徒は休会、退会状態に変更できません。",

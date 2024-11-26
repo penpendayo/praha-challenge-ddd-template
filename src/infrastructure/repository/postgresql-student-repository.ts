@@ -59,7 +59,7 @@ export class PostgresqlStudentRepository implements StudentRepositoryInterface {
       });
     }
 
-    if (status === "enrollment") {
+    if (status === "参加") {
       return new Student({
         email: row.email,
         enrollmentStatus: status,
@@ -101,7 +101,7 @@ export class PostgresqlStudentRepository implements StudentRepositoryInterface {
       });
     }
 
-    if (status === "enrollment") {
+    if (status === "参加") {
       return new Student({
         email: row.email,
         enrollmentStatus: status,
@@ -119,13 +119,13 @@ const toEnrollmentStatusColumn = (
   studentEnrollmentStatus: StudentEnrollmentStatus,
 ) => {
   switch (studentEnrollmentStatus) {
-    case "enrollment": {
+    case "参加": {
       return 1;
     }
-    case "withdraw": {
+    case "退会": {
       return 2;
     }
-    case "leave": {
+    case "休会": {
       return 3;
     }
   }
@@ -136,13 +136,13 @@ const toEnrollmentStatus = (
 ): StudentEnrollmentStatus => {
   switch (studentEnrollmentStatus) {
     case 1: {
-      return "enrollment";
+      return "参加";
     }
     case 2: {
-      return "withdraw";
+      return "退会";
     }
     case 3: {
-      return "leave";
+      return "休会";
     }
     default:
       throw new Error(

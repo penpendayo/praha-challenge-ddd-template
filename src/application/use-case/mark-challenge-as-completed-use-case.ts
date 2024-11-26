@@ -16,7 +16,7 @@ export class MarkChallengeAsCompletedUseCaseChallengeNotFoundError extends Error
   public override readonly name = "MarkChallengeAsCompletedUseCaseChallengeNotFoundError";
 
   public constructor() {
-    super("challenge not found");
+    super("課題が見つかりません");
   }
 }
 

@@ -17,7 +17,7 @@ export class RemoveTeamStudentUseCaseStudentNotFoundError extends Error {
     "RemoveTeamStudentUseCaseStudentNotFoundError";
 
   public constructor() {
-    super("student not found");
+    super("生徒が見つかりません");
   }
 }
 
@@ -25,16 +25,15 @@ export class RemoveTeamStudentUseCaseTeamNotFoundError extends Error {
   public override readonly name = "RemoveTeamStudentUseCaseTeamNotFoundError";
 
   public constructor() {
-    super("team not found");
+    super("チームが見つかりません");
   }
 }
 
-//チームに所属してませんよなエラー
 export class RemoveTeamStudentUseCaseStudentNotInTeamError extends Error {
   public override readonly name = "RemoveTeamStudentUseCaseTeamNotFoundError";
 
   public constructor() {
-    super("student not in team");
+    super("チームに生徒が所属していません");
   }
 }
 
@@ -83,7 +82,7 @@ export class RemoveTeamStudentUseCase {
       // biome-ignore lint/style/noNonNullAssertion: <explanation>
       const student = await this.studentRepo.findById(newTeam.students[0]!.id);
       if (!student) {
-        throw new Error("student not found");
+        throw new RemoveTeamStudentUseCaseStudentNotFoundError();
       }
 
       // 一番人数が少ないチーム（複数ある場合はランダム）を取得して、一人になってしまった生徒を追加＆保存

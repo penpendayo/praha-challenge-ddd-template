@@ -38,7 +38,7 @@ export class Team {
         ...this.students,
         {
           ...student,
-          enrollmentStatus: "enrollment",
+          enrollmentStatus: "参加",
         },
       ],
     });

@@ -16,7 +16,7 @@ export class MarkChallengeAsInprogressUseCaseChallengeNotFoundError extends Erro
   public override readonly name = "MarkChallengeAsInprogressUseCaseChallengeNotFoundError";
 
   public constructor() {
-    super("challenge not found");
+    super("課題が見つかりません");
   }
 }
 

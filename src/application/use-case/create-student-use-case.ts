@@ -8,13 +8,13 @@ export type CreateStudentUseCaseInput =
   | {
       email: string;
       name: string;
-      enrollmentStatus: "leave" | "withdraw" | "enrollment";
+      enrollmentStatus: "休会" | "退会" | "参加";
       teamId: null;
     }
   | {
       email: string;
       name: string;
-      enrollmentStatus: "enrollment";
+      enrollmentStatus: "参加";
       teamId: string;
     };
 

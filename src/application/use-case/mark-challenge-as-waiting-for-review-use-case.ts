@@ -16,7 +16,7 @@ export class MarkChallengeAsWaitingForReviewUseCaseChallengeNotFoundError extend
   public override readonly name = "MarkChallengeAsWaitingForReviewUseCaseChallengeNotFoundError";
 
   public constructor() {
-    super("challenge not found");
+    super("課題が見つかりません");
   }
 }
 

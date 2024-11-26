@@ -1,6 +1,6 @@
 import { ulid } from "ulid";
 
-export type TeamStudentParticipantStatus = "enrollment";
+export type TeamStudentEnrollmentStatus = "enrollment";
 
 /**
  * チームに所属している生徒
@@ -9,13 +9,13 @@ export class TeamStudent {
   readonly id: string;
   readonly email: string;
   readonly name: string;
-  readonly enrollmentStatus: TeamStudentParticipantStatus;
+  readonly enrollmentStatus: TeamStudentEnrollmentStatus;
 
   constructor(props: {
     id?: string;
     email: string;
     name: string;
-    enrollmentStatus: TeamStudentParticipantStatus;
+    enrollmentStatus: TeamStudentEnrollmentStatus;
   }) {
     this.id = props.id ?? ulid();
     this.email = props.email;

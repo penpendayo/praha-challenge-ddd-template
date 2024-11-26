@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import {
   Student,
-  type StudentParticipantStatus,
+  type StudentEnrollmentStatus,
 } from "../../domain/sudent/student";
 import type { StudentRepositoryInterface } from "../../domain/sudent/student-repository";
 import type { Database } from "../../libs/drizzle/get-database";
@@ -112,14 +112,13 @@ export class PostgresqlStudentRepository implements StudentRepositoryInterface {
     }
 
     throw new Error("想定しない参加ステータスです。");
-
   }
 }
 
 const toEnrollmentStatusColumn = (
-  studentParticipantStatus: StudentParticipantStatus,
+  studentEnrollmentStatus: StudentEnrollmentStatus,
 ) => {
-  switch (studentParticipantStatus) {
+  switch (studentEnrollmentStatus) {
     case "enrollment": {
       return 1;
     }
@@ -133,9 +132,9 @@ const toEnrollmentStatusColumn = (
 };
 
 const toEnrollmentStatus = (
-  studentParticipantStatus: number,
-): StudentParticipantStatus => {
-  switch (studentParticipantStatus) {
+  studentEnrollmentStatus: number,
+): StudentEnrollmentStatus => {
+  switch (studentEnrollmentStatus) {
     case 1: {
       return "enrollment";
     }
@@ -147,7 +146,7 @@ const toEnrollmentStatus = (
     }
     default:
       throw new Error(
-        `想定しない参加ステータスです: ${studentParticipantStatus}`,
+        `想定しない参加ステータスです: ${studentEnrollmentStatus}`,
       );
   }
 };

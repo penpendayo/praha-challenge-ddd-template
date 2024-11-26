@@ -4,7 +4,7 @@ import { TeamName } from "../../domain/team/team-name";
 import type { TeamRepositoryInterface } from "../../domain/team/team-repository";
 import {
   TeamStudent,
-  type TeamStudentParticipantStatus,
+  type TeamStudentEnrollmentStatus,
 } from "../../domain/team/team-student";
 import type { Database } from "../../libs/drizzle/get-database";
 import { students, teams } from "../../libs/drizzle/schema";
@@ -172,9 +172,9 @@ export class PostgresqlTeamRepository implements TeamRepositoryInterface {
 }
 
 const toEnrollmentStatusColumn = (
-  studentParticipantStatus: TeamStudentParticipantStatus,
+  studentEnrollmentStatus: TeamStudentEnrollmentStatus,
 ) => {
-  switch (studentParticipantStatus) {
+  switch (studentEnrollmentStatus) {
     case "enrollment": {
       return 1;
     }
@@ -182,13 +182,13 @@ const toEnrollmentStatusColumn = (
 };
 
 const toEnrollmentStatus = (
-  studentParticipantStatus: number,
-): TeamStudentParticipantStatus => {
-  switch (studentParticipantStatus) {
+  studentEnrollmentStatus: number,
+): TeamStudentEnrollmentStatus => {
+  switch (studentEnrollmentStatus) {
     case 1: {
       return "enrollment";
     }
     default:
-      throw new Error(`想定しない参加ステータス: ${studentParticipantStatus}`);
+      throw new Error(`想定しない参加ステータス: ${studentEnrollmentStatus}`);
   }
 };

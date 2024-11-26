@@ -1,6 +1,6 @@
 import { ulid } from "ulid";
 
-export type StudentParticipantStatus = "enrollment" | "leave" | "withdraw";
+export type StudentEnrollmentStatus = "enrollment" | "leave" | "withdraw";
 
 /**
  * 生徒
@@ -9,7 +9,7 @@ export class Student {
   readonly id: string;
   readonly email: string;
   readonly name: string;
-  readonly enrollmentStatus: StudentParticipantStatus;
+  readonly enrollmentStatus: StudentEnrollmentStatus;
   readonly teamId: string | null;
 
   constructor(
@@ -39,7 +39,7 @@ export class Student {
   /**
    * 参加状態を変更する
    */
-  changeEnrollmentStatus(status: StudentParticipantStatus) {
+  changeEnrollmentStatus(status: StudentEnrollmentStatus) {
     switch (status) {
       case "enrollment":
         return new Student({

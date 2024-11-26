@@ -1,6 +1,6 @@
 import {
   Student,
-  type StudentParticipantStatus,
+  type StudentEnrollmentStatus,
 } from "../../domain/sudent/student";
 import type { StudentRepositoryInterface } from "../../domain/sudent/student-repository";
 
@@ -21,7 +21,7 @@ export type CreateStudentUseCaseInput =
 export type CreateStudentUseCasePayload = {
   email: string;
   name: string;
-  enrollmentStatus: StudentParticipantStatus;
+  enrollmentStatus: StudentEnrollmentStatus;
 };
 
 export class CreateStudentUseCase {

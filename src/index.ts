@@ -1,10 +1,10 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import "dotenv/config";
-import { enrollTeamStudentController } from "./presentation/students/enroll-team-student-controller";
+import { enrollTeamStudentController } from "./presentation/students/add-team-student-controller";
 import { getStudentListController } from "./presentation/students/get-student-list-controller";
 import { getTeamListController } from "./presentation/students/get-team-list-controller";
-import { leaveTeamStudentController } from "./presentation/students/leave-team-student-controller";
+import { leaveTeamStudentController } from "./presentation/students/remove-team-student-controller";
 import { markChallengeAsInprogressController } from "./presentation/students/mark-challenge-as-inprogress-controller";
 
 const app = new Hono();

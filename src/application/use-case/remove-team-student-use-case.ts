@@ -22,11 +22,19 @@ export class RemoveTeamStudentUseCaseStudentNotFoundError extends Error {
 }
 
 export class RemoveTeamStudentUseCaseTeamNotFoundError extends Error {
-  public override readonly name =
-    "RemoveTeamStudentUseCaseTeamNotFoundError";
+  public override readonly name = "RemoveTeamStudentUseCaseTeamNotFoundError";
 
   public constructor() {
     super("team not found");
+  }
+}
+
+//チームに所属してませんよなエラー
+export class RemoveTeamStudentUseCaseStudentNotInTeamError extends Error {
+  public override readonly name = "RemoveTeamStudentUseCaseTeamNotFoundError";
+
+  public constructor() {
+    super("student not in team");
   }
 }
 
@@ -49,6 +57,14 @@ export class RemoveTeamStudentUseCase {
       throw new RemoveTeamStudentUseCaseTeamNotFoundError();
     }
 
+    // チームに生徒が所属しているか確認する
+    const isExistStudent = team.students.some(
+      (student) => student.id === input.studentId,
+    );
+    if (!isExistStudent) {
+      throw new RemoveTeamStudentUseCaseStudentNotInTeamError();
+    }
+
     // 生徒をチームから外す
     const newTeam = team.removeStudent(input.studentId);
 
@@ -64,12 +80,8 @@ export class RemoveTeamStudentUseCase {
 
     // 参加者が減ることでチームが1名になってしまう場合
     if (newTeam.students.length === 1) {
-      const studentId = newTeam.students[0]?.id;
-      if (!studentId) {
-        throw new Error("student not found");
-      }
-
-      const student = await this.studentRepo.findById(studentId);
+      // biome-ignore lint/style/noNonNullAssertion: <explanation>
+      const student = await this.studentRepo.findById(newTeam.students[0]!.id);
       if (!student) {
         throw new Error("student not found");
       }
@@ -80,7 +92,7 @@ export class RemoveTeamStudentUseCase {
       await this.teamRepo.save(addedTeam);
 
       // 元のチームから生徒を削除＆保存
-      const removedTeam = newTeam.removeStudent(studentId);
+      const removedTeam = newTeam.removeStudent(student.id);
       await this.teamRepo.save(removedTeam);
       return {
         id: removedTeam.id,

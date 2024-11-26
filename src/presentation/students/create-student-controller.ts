@@ -14,11 +14,20 @@ type Env = {
 
 export const createStudentListController = new Hono();
 
-const createStudentUseCaseBodySchema = z.object({
-  email: z.string(),
-  name: z.string(),
-  enrollmentStatus: z.enum(["withdraw", "leave"]),
-});
+const createStudentUseCaseBodySchema = z.union([
+  z.object({
+    email: z.string(),
+    name: z.string(),
+    enrollmentStatus: z.enum(["休会", "退会", "参加"]),
+    teamId: z.null(),
+  }),
+  z.object({
+    email: z.string(),
+    name: z.string(),
+    enrollmentStatus: z.enum(["参加"]),
+    teamId: z.string(),
+  }),
+]);
 
 createStudentListController.post(
   "/student",

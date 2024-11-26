@@ -2,13 +2,15 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { createMiddleware } from "hono/factory";
 import { z } from "zod";
-import { LeaveTeamStudentUseCase } from "../../application/use-case/leave-team-student-use-case";
+import { RemoveTeamStudentUseCase } from "../../application/use-case/remove-team-student-use-case";
+import { notification } from "../../infrastructure/api/notification";
+import { PostgresqlStudentRepository } from "../../infrastructure/repository/postgresql-student-repository";
 import { PostgresqlTeamRepository } from "../../infrastructure/repository/postgresql-team-repository";
 import { getDatabase } from "../../libs/drizzle/get-database";
 
 type Env = {
   Variables: {
-    leaveTeamStudentUseCase: LeaveTeamStudentUseCase;
+    removeTeamStudentUseCase: RemoveTeamStudentUseCase;
   };
 };
 
@@ -31,16 +33,21 @@ leaveTeamStudentController.post(
   createMiddleware<Env>(async (context, next) => {
     const database = getDatabase();
     const teamRepository = new PostgresqlTeamRepository(database);
+    const studentRepository = new PostgresqlStudentRepository(database);
     context.set(
-      "leaveTeamStudentUseCase",
-      new LeaveTeamStudentUseCase(teamRepository),
+      "removeTeamStudentUseCase",
+      new RemoveTeamStudentUseCase(
+        teamRepository,
+        studentRepository,
+        notification,
+      ),
     );
 
     await next();
   }),
   async (context) => {
     const body = context.req.valid("json");
-    const payload = await context.var.leaveTeamStudentUseCase.invoke(body);
+    const payload = await context.var.removeTeamStudentUseCase.invoke(body);
 
     return context.json(payload);
   },

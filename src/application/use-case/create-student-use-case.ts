@@ -2,21 +2,10 @@ import {
   Student,
   type StudentEnrollmentStatus,
 } from "../../domain/sudent/student";
+import type { StudentConstructorProps } from "../../domain/sudent/student";
 import type { StudentRepositoryInterface } from "../../domain/sudent/student-repository";
 
-export type CreateStudentUseCaseInput =
-  | {
-      email: string;
-      name: string;
-      enrollmentStatus: "休会" | "退会" | "参加";
-      teamId: null;
-    }
-  | {
-      email: string;
-      name: string;
-      enrollmentStatus: "参加";
-      teamId: string;
-    };
+export type CreateStudentUseCaseInput = StudentConstructorProps;
 
 export type CreateStudentUseCasePayload = {
   email: string;

@@ -1,8 +1,8 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { createMiddleware } from "hono/factory";
-import { z } from "zod";
 import { CreateStudentUseCase } from "../../application/use-case/create-student-use-case";
+import { studentSchema } from "../../domain/sudent/student";
 import { PostgresqlStudentRepository } from "../../infrastructure/repository/postgresql-student-repository";
 import { getDatabase } from "../../libs/drizzle/get-database";
 
@@ -14,20 +14,7 @@ type Env = {
 
 export const createStudentListController = new Hono();
 
-const createStudentUseCaseBodySchema = z.union([
-  z.object({
-    email: z.string(),
-    name: z.string(),
-    enrollmentStatus: z.enum(["休会", "退会", "参加"]),
-    teamId: z.null(),
-  }),
-  z.object({
-    email: z.string(),
-    name: z.string(),
-    enrollmentStatus: z.enum(["参加"]),
-    teamId: z.string(),
-  }),
-]);
+const createStudentUseCaseBodySchema = studentSchema;
 
 createStudentListController.post(
   "/student",

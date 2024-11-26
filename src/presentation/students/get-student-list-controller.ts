@@ -16,7 +16,10 @@ getStudentListController.get(
   "/students",
   createMiddleware<Env>(async (context, next) => {
     const database = getDatabase();
-    context.set("studentListQueryService", new PostgresqlStudentListQueryService(database));
+    context.set(
+      "studentListQueryService",
+      new PostgresqlStudentListQueryService(database),
+    );
 
     await next();
   }),

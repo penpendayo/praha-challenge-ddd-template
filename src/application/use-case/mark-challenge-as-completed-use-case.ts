@@ -9,11 +9,12 @@ export type MarkChallengeAsCompletedUseCaseInput = {
 export type MarkChallengeAsCompletedUseCasePayload = {
   id: string;
   name: string;
-  status: ChallengeStatus
+  status: ChallengeStatus;
 };
 
 export class MarkChallengeAsCompletedUseCaseChallengeNotFoundError extends Error {
-  public override readonly name = "MarkChallengeAsCompletedUseCaseChallengeNotFoundError";
+  public override readonly name =
+    "MarkChallengeAsCompletedUseCaseChallengeNotFoundError";
 
   public constructor() {
     super("課題が見つかりません");
@@ -41,8 +42,8 @@ export class MarkChallengeAsCompletedUseCase {
 
     return {
       id: updatedChallenge.id,
-      name: updatedChallenge.name,
-      status: updatedChallenge.status
+      name: updatedChallenge.title,
+      status: updatedChallenge.status,
     };
   }
 }

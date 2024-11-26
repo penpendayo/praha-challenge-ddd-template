@@ -1,7 +1,6 @@
 import type { StudentRepositoryInterface } from "../../domain/sudent/student-repository";
 import type { TeamRepositoryInterface } from "../../domain/team/team-repository";
 
-
 export type AddTeamStudentUseCaseInput = {
   studentId: string;
   teamId: string;
@@ -13,8 +12,7 @@ export type AddTeamStudentUseCasePayload = {
 };
 
 export class AddTeamStudentUseCaseStudentNotFoundError extends Error {
-  public override readonly name =
-    "AddTeamStudentUseCaseStudentNotFoundError";
+  public override readonly name = "AddTeamStudentUseCaseStudentNotFoundError";
 
   public constructor() {
     super("生徒が見つかりません");

@@ -9,11 +9,12 @@ export type MarkChallengeAsInprogressUseCaseInput = {
 export type MarkChallengeAsInprogressUseCasePayload = {
   id: string;
   name: string;
-  status: ChallengeStatus
+  status: ChallengeStatus;
 };
 
 export class MarkChallengeAsInprogressUseCaseChallengeNotFoundError extends Error {
-  public override readonly name = "MarkChallengeAsInprogressUseCaseChallengeNotFoundError";
+  public override readonly name =
+    "MarkChallengeAsInprogressUseCaseChallengeNotFoundError";
 
   public constructor() {
     super("課題が見つかりません");
@@ -41,8 +42,8 @@ export class MarkChallengeAsInprogressUseCase {
 
     return {
       id: updatedChallenge.id,
-      name: updatedChallenge.name,
-      status: updatedChallenge.status
+      name: updatedChallenge.title,
+      status: updatedChallenge.status,
     };
   }
 }

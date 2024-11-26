@@ -9,11 +9,12 @@ export type MarkChallengeAsWaitingForReviewUseCaseInput = {
 export type MarkChallengeAsWaitingForReviewUseCasePayload = {
   id: string;
   name: string;
-  status: ChallengeStatus
+  status: ChallengeStatus;
 };
 
 export class MarkChallengeAsWaitingForReviewUseCaseChallengeNotFoundError extends Error {
-  public override readonly name = "MarkChallengeAsWaitingForReviewUseCaseChallengeNotFoundError";
+  public override readonly name =
+    "MarkChallengeAsWaitingForReviewUseCaseChallengeNotFoundError";
 
   public constructor() {
     super("課題が見つかりません");
@@ -41,8 +42,8 @@ export class MarkChallengeAsWaitingForReviewUseCase {
 
     return {
       id: updatedChallenge.id,
-      name: updatedChallenge.name,
-      status: updatedChallenge.status
+      name: updatedChallenge.title,
+      status: updatedChallenge.status,
     };
   }
 }

@@ -7,4 +7,4 @@ const teamNameSchema = z
 
 export type TeamName = z.infer<typeof teamNameSchema>;
 
-export const TeamName = (teamName: string) => teamNameSchema.parse(teamName)
+export const TeamName = (teamName: string) => teamNameSchema.parse(teamName);

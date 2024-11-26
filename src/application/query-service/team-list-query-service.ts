@@ -4,7 +4,7 @@ export type TeamListQueryServicePayload = {
   students: {
     id: string;
     name: string;
-  }[]
+  }[];
 }[];
 
 export interface TeamListQueryServiceInterface {

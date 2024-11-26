@@ -24,7 +24,7 @@ export class PostgresqlTeamListQueryService
       })
       .from(teams)
       .innerJoin(students, eq(teams.id, students.teamId));
-  
+
     // studentsの配列に加工する処理（面倒くさいのでChatGPTに書いてもらったのでテキトー）
     return rows.reduce(
       (acc, row) => {
@@ -55,6 +55,5 @@ export class PostgresqlTeamListQueryService
         students: { id: string; name: string }[];
       }[],
     );
-
   }
 }

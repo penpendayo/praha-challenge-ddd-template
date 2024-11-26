@@ -16,7 +16,10 @@ getTeamListController.get(
   "/teams",
   createMiddleware<Env>(async (context, next) => {
     const database = getDatabase();
-    context.set("teamListQueryServiceInterface", new PostgresqlTeamListQueryService(database));
+    context.set(
+      "teamListQueryServiceInterface",
+      new PostgresqlTeamListQueryService(database),
+    );
 
     await next();
   }),

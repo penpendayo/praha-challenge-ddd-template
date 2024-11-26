@@ -1,4 +1,3 @@
-
 import { and, eq } from "drizzle-orm";
 import {
   Challenge,
@@ -47,7 +46,7 @@ export class PostgresqlChallengeRepository
 
     return new Challenge({
       id: row.challenge.id,
-      name: row.challenge.name,
+      title: row.challenge.name,
       studentId: row.studentId,
       status: fromChallengeStatusColumn(row.challenge.status),
     });
@@ -59,12 +58,12 @@ export class PostgresqlChallengeRepository
         .insert(challenges)
         .values({
           id: challenge.id,
-          name: challenge.name,
+          name: challenge.title,
         })
         .onConflictDoUpdate({
           target: challenges.id,
           set: {
-            name: challenge.name,
+            name: challenge.title,
           },
         });
 

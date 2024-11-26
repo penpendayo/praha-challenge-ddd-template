@@ -1,23 +1,24 @@
 import { ulid } from "ulid";
 
-export type ChallengeStatus =
-  | "未着手"
-  | "進行中"
-  | "レビュー待ち"
-  | "完了";
+export type ChallengeStatus = "未着手" | "進行中" | "レビュー待ち" | "完了";
 
 /**
  * 課題
  */
 export class Challenge {
   readonly id: string;
-  readonly name: string;
+  readonly title: string;
   readonly status: ChallengeStatus;
   readonly studentId: string;
 
-  constructor(props: { id?: string; name: string; status: ChallengeStatus, studentId: string }) {
+  constructor(props: {
+    id?: string;
+    title: string;
+    status: ChallengeStatus;
+    studentId: string;
+  }) {
     this.id = props.id ?? ulid();
-    this.name = props.name;
+    this.title = props.title;
     this.status = props.status;
     this.studentId = props.studentId;
   }
@@ -28,14 +29,16 @@ export class Challenge {
   markInProgress(operatingStudentId: string) {
     this.#ensureOwnership(operatingStudentId);
 
-    if(this.status === "未着手" || this.status === "レビュー待ち") {
+    if (this.status === "未着手" || this.status === "レビュー待ち") {
       return new Challenge({
         ...this,
         status: "進行中",
       });
     }
 
-    throw new Error("「未着手」または「レビュー待ち」の課題のみ、「進行中」に変更できます");
+    throw new Error(
+      "「未着手」または「レビュー待ち」の課題のみ、「進行中」に変更できます",
+    );
   }
 
   /**
@@ -44,7 +47,7 @@ export class Challenge {
   markWaitingForReview(operatingStudentId: string) {
     this.#ensureOwnership(operatingStudentId);
 
-    if(this.status === "進行中") {
+    if (this.status === "進行中") {
       return new Challenge({
         ...this,
         status: "レビュー待ち",
@@ -60,7 +63,7 @@ export class Challenge {
   markCompleted(operatingStudentId: string) {
     this.#ensureOwnership(operatingStudentId);
 
-    if(this.status === "レビュー待ち") {
+    if (this.status === "レビュー待ち") {
       return new Challenge({
         ...this,
         status: "完了",

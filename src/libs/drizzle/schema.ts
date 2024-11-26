@@ -21,19 +21,26 @@ export const students = pgTable("students", {
 export const studentRelations = relations(students, ({ one, many }) => ({
   team: one(teams, {
     fields: [students.teamId],
-    references: [teams.id]
+    references: [teams.id],
   }),
   challenges: many(challenges),
 }));
 
-export const studentsToChallenges = pgTable('students_to_challenge', {
-  studentId: varchar('student_id').notNull().references(() => students.id),
-  challengeId: varchar('challenge_id').notNull().references(() => challenges.id),
-  status: integer('status').notNull(),
-}, (t) => ({
-  unique: primaryKey({ columns: [t.challengeId, t.studentId] }),
-}));
-
+export const studentsToChallenges = pgTable(
+  "students_to_challenge",
+  {
+    studentId: varchar("student_id")
+      .notNull()
+      .references(() => students.id),
+    challengeId: varchar("challenge_id")
+      .notNull()
+      .references(() => challenges.id),
+    status: integer("status").notNull(),
+  },
+  (t) => ({
+    unique: primaryKey({ columns: [t.challengeId, t.studentId] }),
+  }),
+);
 
 export const teams = pgTable("teams", {
   id: varchar("id").primaryKey(),

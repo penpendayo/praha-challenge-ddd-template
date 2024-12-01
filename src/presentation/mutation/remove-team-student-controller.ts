@@ -14,16 +14,16 @@ type Env = {
   };
 };
 
-export const leaveTeamStudentController = new Hono();
+export const removeTeamStudentController = new Hono();
 
-const leaveTeamStudentUseCaseSchema = z.object({
+const removeTeamStudentUseCaseSchema = z.object({
   studentId: z.string(),
   teamId: z.string(),
 });
 
-leaveTeamStudentController.post(
+removeTeamStudentController.post(
   "/student/remove",
-  zValidator("json", leaveTeamStudentUseCaseSchema, (result, c) => {
+  zValidator("json", removeTeamStudentUseCaseSchema, (result, c) => {
     if (!result.success) {
       return c.text("invalid body", 400);
     }

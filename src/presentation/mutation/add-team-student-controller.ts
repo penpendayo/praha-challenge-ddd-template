@@ -13,16 +13,16 @@ type Env = {
   };
 };
 
-export const enrollTeamStudentController = new Hono();
+export const addTeamStudentController = new Hono();
 
-const enrollTeamStudentUseCaseSchema = z.object({
+const addTeamStudentUseCaseSchema = z.object({
   studentId: z.string(),
   teamId: z.string(),
 });
 
-enrollTeamStudentController.post(
+addTeamStudentController.post(
   "/student/add",
-  zValidator("json", enrollTeamStudentUseCaseSchema, (result, c) => {
+  zValidator("json", addTeamStudentUseCaseSchema, (result, c) => {
     if (!result.success) {
       return c.text("invalid body", 400);
     }

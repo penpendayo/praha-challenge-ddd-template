@@ -10,6 +10,7 @@ import { markChallengeAsWaitingForReviewController } from "./presentation/mutati
 import { removeTeamStudentController } from "./presentation/mutation/remove-team-student-controller";
 import { getStudentListController } from "./presentation/query/get-student-list-controller";
 import { getTeamListController } from "./presentation/query/get-team-list-controller";
+import { withdrawStudentController } from "./presentation/mutation/withdraw-student-controller";
 
 const app = new Hono();
 
@@ -19,6 +20,7 @@ app.route("/", addTeamStudentController);
 app.route("/", removeTeamStudentController);
 app.route("/", createStudentListController);
 app.route("/", enrollStudentController);
+app.route("/", withdrawStudentController);
 app.route("/", markChallengeAsInprogressController);
 app.route("/", markChallengeAsCompletedController);
 app.route("/", markChallengeAsWaitingForReviewController);

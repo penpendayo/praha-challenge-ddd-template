@@ -1,6 +1,13 @@
 import { ulid } from "ulid";
 
-export type ChallengeStatus = "未着手" | "進行中" | "レビュー待ち" | "完了";
+export const ChallengeStatus = [
+  "未着手",
+  "進行中",
+  "レビュー待ち",
+  "完了",
+] as const;
+
+export type ChallengeStatus = (typeof ChallengeStatus)[number];
 
 /**
  * 課題

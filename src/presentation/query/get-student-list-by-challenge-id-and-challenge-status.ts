@@ -19,7 +19,7 @@ export const getStudentListByChallengeIdAndChallengeStatusController =
 const getStudentListByChallengeIdAndChallengeStatusUseCaseSchema = z.object({
   challengeId: z.string(),
   challengeStatus: z.enum(ChallengeStatus),
-  after: z.string().optional(),
+  cursor: z.string().optional(),
   limit: z.number().optional(),
 });
 

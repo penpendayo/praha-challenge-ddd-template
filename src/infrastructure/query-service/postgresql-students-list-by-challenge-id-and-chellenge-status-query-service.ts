@@ -1,4 +1,4 @@
-import { and, eq, gt } from "drizzle-orm";
+import { type SQL, and, eq, gt } from "drizzle-orm";
 import type {
   StudentListByChallengeIdAndChallengeStatusQueryServiceInterface,
   StudentListByChallengeIdAndChallengeStatusQueryServicePayload,
@@ -15,17 +15,17 @@ export class PostgresqlStudentListByChallengeIdAndChallengeStatusQueryService
   public async invoke({
     challengeId,
     challengeStatus,
-    after,
+    cursor,
     limit,
   }: {
     challengeId: string;
     challengeStatus: ChallengeStatus;
-    after?: string | undefined;
+    cursor?: string | undefined;
     limit?: number | undefined;
   }): Promise<StudentListByChallengeIdAndChallengeStatusQueryServicePayload> {
-    const filters: Parameters<typeof and> = [];
-    if (after) {
-      filters.push(gt(studentsToChallenges.studentId, after)); // NOTE: Studentのid(ULID)でカーソルページネーションしてる
+    const filters: SQL[] = [];
+    if (cursor) {
+      filters.push(gt(studentsToChallenges.studentId, cursor)); // NOTE: Studentのid(ULID)でカーソルページネーションしてる
     }
 
     const rows = await this.database
@@ -50,7 +50,7 @@ export class PostgresqlStudentListByChallengeIdAndChallengeStatusQueryService
 
     return {
       // @ts-expect-error: rows[rows.length - 1]は必ず存在する
-      after: rows[rows.length - 1].id,
+      cursor: rows[rows.length - 1].id,
       students: rows.map((row) => {
         return {
           id: row.id,

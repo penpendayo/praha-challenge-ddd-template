@@ -129,7 +129,7 @@ export class PostgresqlTeamRepository implements TeamRepositoryInterface {
       })
       .from(teams)
       .leftJoin(students, eq(teams.id, students.teamId))
-      .groupBy(teams.id, teams.name)
+      .groupBy(teams.id)
       .orderBy(sql`student_count`)
       //TODO: 最小の数が同じチームが複数ある場合はランダムで取得するべきだけど、面倒くさいのでとりあえずこれで取得してる
       .limit(1);

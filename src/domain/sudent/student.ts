@@ -45,6 +45,8 @@ export class Student {
 
   /**
    * 参加状態を変更する
+   * TODO: 変更するステータスごとにメソッドを分けるべきだった気がする。
+   * Challengeエンティティはそのようにしてるし統一感がない。でも面倒くさいのでそのままにする。
    */
   changeEnrollmentStatus(status: StudentEnrollmentStatus) {
     switch (status) {

@@ -66,43 +66,51 @@ export class RemoveTeamStudentUseCase {
 
     // 生徒をチームから外す
     const newTeam = team.removeStudent(input.studentId);
+    await this.teamRepo.save(newTeam);
 
-    // 参加者が減ることでチームが2名以下になってしまう場合
-    if (newTeam.students.length === 2) {
-      // 管理者のメールアドレス（今回の課題ではあなたのメールアドレス）宛にメールを送信する。
-      await this.notification.sendEmail({
-        to: "admin@example.com",
-        subject: "チームの参加者が減りました",
-        body: `${newTeam.name}の参加者が減りました。`,
-      });
-    }
+    switch (newTeam.students.length) {
+      // 参加者が減ることでチームが1名になってしまう場合、もっとも人数が少ないチーム（複数ある場合はランダム）を取得して、1人になってしまった生徒をそのチームに追加する
+      case 1: {
+        const student = await this.studentRepo.findById(
+          // biome-ignore lint/style/noNonNullAssertion: 必ず生徒が存在する
+          newTeam.students[0]!.id,
+        );
 
-    // 参加者が減ることでチームが1名になってしまう場合
-    if (newTeam.students.length === 1) {
-      // biome-ignore lint/style/noNonNullAssertion: <explanation>
-      const student = await this.studentRepo.findById(newTeam.students[0]!.id);
-      if (!student) {
-        throw new RemoveTeamStudentUseCaseStudentNotFoundError();
+        if (!student) {
+          throw new RemoveTeamStudentUseCaseStudentNotFoundError();
+        }
+
+        const team = await this.teamRepo.findTheSmallestTeam();
+        const addedTeam = team.addStudent(student);
+        await this.teamRepo.save(addedTeam);
+
+        const removedTeam = newTeam.removeStudent(student.id);
+        await this.teamRepo.save(removedTeam);
+        return {
+          id: removedTeam.id,
+          name: removedTeam.name,
+        };
       }
 
-      // 一番人数が少ないチーム（複数ある場合はランダム）を取得して、一人になってしまった生徒を追加＆保存
-      const team = await this.teamRepo.findTheSmallestTeam();
-      const addedTeam = team.addStudent(student);
-      await this.teamRepo.save(addedTeam);
+      // 参加者が減ることでチームが2名以下になってしまう場合、管理者のメールアドレス宛にメールを送信する。
+      case 2: {
+        await this.notification.sendEmail({
+          to: "admin@example.com",
+          subject: "チームの参加者が減りました",
+          body: `${newTeam.name}の参加者が減りました。`,
+        });
+        break;
+      }
 
-      // 元のチームから生徒を削除＆保存
-      const removedTeam = newTeam.removeStudent(student.id);
-      await this.teamRepo.save(removedTeam);
-      return {
-        id: removedTeam.id,
-        name: removedTeam.name,
-      };
+      // それ以外の場合、何もしない
+      default: {
+        break;
+      }
     }
 
-    const savedTeam = await this.teamRepo.save(newTeam);
     return {
-      id: savedTeam.id,
-      name: savedTeam.name,
+      id: newTeam.id,
+      name: newTeam.name,
     };
   }
 }

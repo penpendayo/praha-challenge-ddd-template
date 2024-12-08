@@ -47,10 +47,14 @@ export class Team {
   /**
    * チームから生徒を外す
    */
-  removeStudent(studentId: string) {
+  removeStudent(student: Student) {
+    if (student.teamId !== this.id) {
+      throw new Error("チームに参加していない生徒は外すことができません");
+    }
+    
     return new Team({
       ...this,
-      students: this.students.filter((student) => student.id !== studentId),
+      students: this.students.filter((s) => s.id !== student.id),
     });
   }
 }

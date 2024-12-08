@@ -56,16 +56,14 @@ export class RemoveTeamStudentUseCase {
       throw new RemoveTeamStudentUseCaseTeamNotFoundError();
     }
 
-    // チームに生徒が所属しているか確認する
-    const isExistStudent = team.students.some(
-      (student) => student.id === input.studentId,
-    );
-    if (!isExistStudent) {
-      throw new RemoveTeamStudentUseCaseStudentNotInTeamError();
+    // 生徒を取得する
+    const student = await this.studentRepo.findById(input.studentId);
+    if (!student) {
+      throw new RemoveTeamStudentUseCaseStudentNotFoundError();
     }
 
     // 生徒をチームから外す
-    const newTeam = team.removeStudent(input.studentId);
+    const newTeam = team.removeStudent(student);
     await this.teamRepo.save(newTeam);
 
     switch (newTeam.students.length) {
@@ -84,7 +82,7 @@ export class RemoveTeamStudentUseCase {
         const addedTeam = team.addStudent(student);
         await this.teamRepo.save(addedTeam);
 
-        const removedTeam = newTeam.removeStudent(student.id);
+        const removedTeam = newTeam.removeStudent(student);
         await this.teamRepo.save(removedTeam);
         return {
           id: removedTeam.id,

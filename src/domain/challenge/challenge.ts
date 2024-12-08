@@ -85,7 +85,7 @@ export class Challenge {
    */
   #ensureOwnership(operatingStudentId: string): void {
     if (this.studentId !== operatingStudentId) {
-      throw new Error("この課題を変更する権限がありません");
+      throw new Error("課題の所有者のみがステータスを変更できます");
     }
   }
 }

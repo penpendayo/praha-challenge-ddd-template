@@ -54,7 +54,7 @@ export class AddTeamStudentUseCase {
       throw new AddTeamStudentUseCaseStudentNotFoundError();
     }
 
-    // 追加するチームが存在するか確認する
+    // 追加するチームを取得する
     const team = await this.teamRepo.findById(input.teamId);
     if (!team) {
       throw new AddTeamStudentUseCaseTeamNotFoundError();

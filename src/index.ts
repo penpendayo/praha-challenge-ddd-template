@@ -15,18 +15,18 @@ import { getTeamListController } from "./presentation/query/get-team-list-contro
 
 const app = new Hono();
 
-app.route("/", getStudentListController);
-app.route("/", getTeamListController);
 app.route("/", addTeamStudentController);
-app.route("/", removeTeamStudentController);
 app.route("/", createStudentListController);
 app.route("/", enrollStudentController);
-app.route("/", withdrawStudentController);
+app.route("/", getStudentListController);
+app.route("/", getTeamListController);
 app.route("/", leaveStudentController);
-app.route("/", markChallengeAsInprogressController);
 app.route("/", markChallengeAsCompletedController);
+app.route("/", markChallengeAsInprogressController);
 app.route("/", markChallengeAsWaitingForReviewController);
 app.route("/", markChallengeAsWaitingForReviewController);
+app.route("/", removeTeamStudentController);
+app.route("/", withdrawStudentController);
 
 const port = 3000;
 console.log(`Server is running on port ${port}`);

@@ -2,17 +2,16 @@ import { describe, expect, it } from "vitest";
 import { Student } from "../sudent/student";
 import { Team } from "./team";
 import { TeamName } from "./team-name";
-import { TeamStudent } from "./team-student";
 
 describe("Team", () => {
   const defaultTeam = new Team({
     id: "team-id",
     name: TeamName("A"),
-    students: [],
+    studentIds: [],
   });
 
   const defaultStudent = new Student({
-    id: "student-id",
+    id: "student-id-1",
     email: "student@example.com",
     name: "student-name",
     enrollmentStatus: "参加",
@@ -24,15 +23,7 @@ describe("Team", () => {
       it("生徒が追加されること", () => {
         expect(defaultTeam.addStudent(defaultStudent)).toEqual({
           ...defaultTeam,
-          students: [
-            {
-              email: "student@example.com",
-              enrollmentStatus: "参加",
-              id: "student-id",
-              name: "student-name",
-              teamId: null,
-            },
-          ],
+          studentIds: ["student-id-1"],
         });
       });
 
@@ -54,11 +45,11 @@ describe("Team", () => {
       it("エラーになること", () => {
         const team = new Team({
           ...defaultTeam,
-          students: [
-            new TeamStudent({ ...defaultStudent, enrollmentStatus: "参加" }),
-            new TeamStudent({ ...defaultStudent, enrollmentStatus: "参加" }),
-            new TeamStudent({ ...defaultStudent, enrollmentStatus: "参加" }),
-            new TeamStudent({ ...defaultStudent, enrollmentStatus: "参加" }),
+          studentIds: [
+            "student-id-1",
+            "student-id-2",
+            "student-id-3",
+            "student-id-4",
           ],
         });
 
@@ -79,12 +70,12 @@ describe("Team", () => {
 
         const team = new Team({
           ...defaultTeam,
-          students: [new TeamStudent({ ...student, enrollmentStatus: "参加" })],
+          studentIds: ["student-id-1"],
         });
 
         expect(team.removeStudent(student)).toEqual({
           ...team,
-          students: [],
+          studentIds: [],
         });
       });
     });

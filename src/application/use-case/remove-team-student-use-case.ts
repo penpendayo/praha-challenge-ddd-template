@@ -66,12 +66,12 @@ export class RemoveTeamStudentUseCase {
     const newTeam = team.removeStudent(student);
     await this.teamRepo.save(newTeam);
 
-    switch (newTeam.students.length) {
+    switch (newTeam.studentIds.length) {
       // 参加者が減ることでチームが1名になってしまう場合、もっとも人数が少ないチーム（複数ある場合はランダム）を取得して、1人になってしまった生徒をそのチームに追加する
       case 1: {
         const student = await this.studentRepo.findById(
           // biome-ignore lint/style/noNonNullAssertion: 必ず生徒が存在する
-          newTeam.students[0]!.id,
+          newTeam.studentIds[0]!,
         );
 
         if (!student) {

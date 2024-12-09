@@ -1,7 +1,6 @@
 import { ulid } from "ulid";
 import type { Student } from "../sudent/student";
 import type { TeamName } from "./team-name";
-import type { TeamStudent } from "./team-student";
 
 /**
  * チーム
@@ -9,21 +8,21 @@ import type { TeamStudent } from "./team-student";
 export class Team {
   readonly id: string;
   readonly name: TeamName;
-  readonly students: TeamStudent[];
+  readonly studentIds: string[];
   static readonly MAX_MEMBERS = 4;
   static readonly MIN_MEMBERS = 2;
 
-  constructor(props: { id?: string; name: TeamName; students: TeamStudent[] }) {
+  constructor(props: { id?: string; name: TeamName; studentIds: string[] }) {
     this.id = props.id ?? ulid();
     this.name = props.name;
-    this.students = props.students;
+    this.studentIds = props.studentIds;
   }
 
   /**
    * チームに生徒を追加する
    */
   addStudent(student: Student) {
-    const isFull = this.students.length >= Team.MAX_MEMBERS;
+    const isFull = this.studentIds.length >= Team.MAX_MEMBERS;
     if (isFull) {
       throw new Error(`すでに${Team.MAX_MEMBERS}人いるので追加できません`);
     }
@@ -34,13 +33,7 @@ export class Team {
 
     return new Team({
       ...this,
-      students: [
-        ...this.students,
-        {
-          ...student,
-          enrollmentStatus: "参加",
-        },
-      ],
+      studentIds: [...this.studentIds, student.id],
     });
   }
 
@@ -51,10 +44,10 @@ export class Team {
     if (student.teamId !== this.id) {
       throw new Error("チームに参加していない生徒は外すことができません");
     }
-    
+
     return new Team({
       ...this,
-      students: this.students.filter((s) => s.id !== student.id),
+      studentIds: this.studentIds.filter((id) => id !== student.id),
     });
   }
 }

@@ -2,10 +2,6 @@ import { eq, inArray, sql } from "drizzle-orm";
 import { Team } from "../../domain/team/team";
 import { TeamName } from "../../domain/team/team-name";
 import type { TeamRepositoryInterface } from "../../domain/team/team-repository";
-import {
-  TeamStudent,
-  type TeamStudentEnrollmentStatus,
-} from "../../domain/team/team-student";
 import type { Database } from "../../libs/drizzle/get-database";
 import { students, teams } from "../../libs/drizzle/schema";
 
@@ -41,13 +37,9 @@ export class PostgresqlTeamRepository implements TeamRepositoryInterface {
         .where(eq(teams.id, team.id));
 
       //チームから外れた生徒IDを取得する
-      const studentIdsToRemove = team.students
-        .filter((student) => {
-          return !studentsInTeam.some(
-            (studentInTeam) => studentInTeam.id === student.id,
-          );
-        })
-        .map((student) => student.id);
+      const studentIdsToRemove = team.studentIds.filter((id) => {
+        return !studentsInTeam.some((studentInTeam) => studentInTeam.id === id);
+      });
 
       // チームから外れた生徒を外す
       await tx
@@ -59,19 +51,14 @@ export class PostgresqlTeamRepository implements TeamRepositoryInterface {
 
       // チームに参加している生徒を更新する
       await Promise.all(
-        team.students.map((student) => {
+        team.studentIds.map((id) => {
           return tx
             .update(students)
             .set({
-              id: student.id,
-              name: student.name,
-              email: student.email,
-              enrollmentStatus: toEnrollmentStatusColumn(
-                student.enrollmentStatus,
-              ),
+              id,
               teamId: team.id,
             })
-            .where(eq(students.id, student.id));
+            .where(eq(students.id, id));
         }),
       );
     });
@@ -105,14 +92,9 @@ export class PostgresqlTeamRepository implements TeamRepositoryInterface {
     return new Team({
       id: row.team.id,
       name: TeamName(row.team.name),
-      students: rows.flatMap(({ student }) => {
+      studentIds: rows.flatMap(({ student }) => {
         if (!student) return [];
-        return new TeamStudent({
-          id: student.id,
-          name: student.name,
-          email: student.email,
-          enrollmentStatus: toEnrollmentStatus(student.enrollmentStatus),
-        });
+        return student.id;
       }),
     });
   }
@@ -146,9 +128,6 @@ export class PostgresqlTeamRepository implements TeamRepositoryInterface {
         },
         student: {
           id: students.id,
-          name: students.name,
-          email: students.email,
-          enrollmentStatus: students.enrollmentStatus,
         },
       })
       .from(teams)
@@ -158,37 +137,10 @@ export class PostgresqlTeamRepository implements TeamRepositoryInterface {
     return new Team({
       id: team.id,
       name: TeamName(team.name),
-      students: rows.flatMap(({ student }) => {
+      studentIds: rows.flatMap(({ student }) => {
         if (!student) return [];
-        return new TeamStudent({
-          id: student.id,
-          name: student.name,
-          email: student.email,
-          enrollmentStatus: toEnrollmentStatus(student.enrollmentStatus),
-        });
+        return student.id;
       }),
     });
   }
 }
-
-const toEnrollmentStatusColumn = (
-  studentEnrollmentStatus: TeamStudentEnrollmentStatus,
-) => {
-  switch (studentEnrollmentStatus) {
-    case "参加": {
-      return 1;
-    }
-  }
-};
-
-const toEnrollmentStatus = (
-  studentEnrollmentStatus: number,
-): TeamStudentEnrollmentStatus => {
-  switch (studentEnrollmentStatus) {
-    case 1: {
-      return "参加";
-    }
-    default:
-      throw new Error(`想定しない参加ステータス: ${studentEnrollmentStatus}`);
-  }
-};

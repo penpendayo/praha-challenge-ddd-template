@@ -12,7 +12,9 @@
       },
       "complexity": {
         // typescriptのnoPropertyAccessFromIndexSignatureを優先
-        "useLiteralKeys": "off"
+        "useLiteralKeys": "off",
+        // 空のオブジェクトを使いたいため
+        "noBannedTypes": "off" 
       }
     }
   },

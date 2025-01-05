@@ -5,7 +5,7 @@ import {
 } from "../../domain/challenge/challenge";
 import type { ChallengeRepositoryInterface } from "../../domain/challenge/challenge-repository";
 import type { Database } from "../../libs/drizzle/get-database";
-import { challenges, studentsToChallenges } from "../../libs/drizzle/schema";
+import { challenges, students, studentsToChallenges } from "../../libs/drizzle/schema";
 
 export class PostgresqlChallengeRepository
   implements ChallengeRepositoryInterface
@@ -53,6 +53,16 @@ export class PostgresqlChallengeRepository
   }
 
   public async save(challenge: Challenge): Promise<Challenge> {
+    const rows = await this.database
+      .select()
+      .from(students)
+      .where(eq(students.id, challenge.studentId));
+
+    if (!rows.length) {
+      console.log("❌️❌️❌️❌️❌️❌️❌️❌️❌️❌️❌️❌️❌️❌️")
+      throw new Error("Student not found!!");
+    }
+
     await this.database.transaction(async (tx) => {
       await tx
         .insert(challenges)
